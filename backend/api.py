@@ -1,25 +1,31 @@
 from fastapi import FastAPI
-from apiDataModels import userInfo
-from sqlalchemy import create_engine, Table, MetaData
+from dataModels.apiDataModels import userInfo
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from dbDataModels import User
+from dataModels.dbDataModels import User
+from utils.rateLimiter import RateLimiterMiddleware
+from utils.tokenBucket import TokenBucket
+import jwt
+import dotenv
+import os
 
-# import psycopg2
+dotEnvDir = os.path.join(os.path.dirname(__file__), '.env')
+dotenv.load_dotenv(dotEnvDir)
 
-# conn = psycopg2.connect(
-#     dbname="postgres",
-#     dbuser="admin",
-#     password="password",
-#     host="localhost",
-#     port="5432"
-# )
+SECRET_KEY = os.getenv("private-key")
 
 engine = create_engine('postgresql://admin:example@localhost:5432/userdb')
 
 app = FastAPI()
 
+bucket = TokenBucket(capacity=4, refill_rate=2)
+
+# Add the rate limiting middleware to the FastAPI app
+app.add_middleware(RateLimiterMiddleware, bucket=bucket)
+
 @app.post("/signup/")
 async def createUser(user: userInfo):
+    encoded_jwt = ""
     with Session(engine) as session:
         new_user = User(
                         username=user.userName, 
@@ -31,4 +37,16 @@ async def createUser(user: userInfo):
                         )
         session.add(new_user)
         session.commit()
-        return user
+        encoded_jwt = jwt.encode({"username": new_user.id}, SECRET_KEY, algorithm=["RS256"])
+
+    return {"token": encoded_jwt}
+
+@app.get("/login/")
+async def loginUser(username: str, password: str):
+    encoded_jwt = ""
+    with Session(engine) as session:
+        user = session.query(User).filter(User.username == username).first()
+        if user.passphrase == password:
+            encoded_jwt = jwt.encode({"username": user.id}, SECRET_KEY, algorithm=["RS256"])
+
+    return {"token": encoded_jwt}

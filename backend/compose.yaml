@@ -22,6 +22,15 @@ services:
     ports:
       - "5432:5432"
 
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+
   adminer:
     image: adminer
     restart: always
