@@ -37,7 +37,7 @@ export default async function login(username, password) {
 
     try {
             const response = await fetch('http://localhost:8000/login/', { // Replace with your actual endpoint URL
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
