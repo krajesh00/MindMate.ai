@@ -1,27 +1,190 @@
-* { 
-    box-sizing: border-fix;
+* {
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html,
-body {
-    height: 100%,
+.appContainer {
+    display: flex; /* This turns Flexbox on for the container */
+    background: #080424 !important; /* Ensures override */
 }
-#root {
-    background-color: #f0f0f0;
+
+
+.wrapper {
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+}
+
+.sideBar {
+    flex:3;
+    border-right: 1px solid rgb(100, 100, 100);
+}
+
+
+.logo{
+    margin-top: -0.5rem; /* Adjust this value as needed */
+    margin-right: 1rem;
+}
+
+.brand {
+    font-size: 2rem;
+    color: white;
+}
+
+.upperSide {
+    padding: 2.5rem;
+    border-bottom: 1px solid rgb(100, 100, 100);
+    height: 70%;
+}
+
+.upperSideTop {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    margin: 2.5rem;
+}
+
+.addBtn {
+    height: 2rem;
+    padding-right: 1rem;
+
+}
+
+.midBtn { 
+    background: #5A4BFF;
+    border: none;
+    color: white;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+    width: 25rem;
+    display: flex;
     align-items: center;
-    height: 100%
+    justify-content: center;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+    border-radius: 0.5rem;
 }
 
-.__chat {
-    max-width: 90%;
-    margin: auto;
-    background-color: #fff;
-    min-height: 80vh;
-    width: 100%;
-    border-radius: 10px;
-    padding: 20px;
+.query {
     display: flex;
-    padding-left: 0;
+    align-items: center;
+    color: rgba(222, 222, 222, 1);
+    background: transparent;
+    padding: 1.5rem;
+    width: 25rem;
+    margin: 1rem auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(98, 98, 98, 1);
+}
+
+.query>img {
+    margin-right: 2rem;
+    object-fit: cover;
+    height: 1.75rem;
+}
+
+.txt {
+    color: white;
+}
+
+.lowerSide {
+    padding: 2rem;
+}
+
+.listItems {
+    margin:0.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    color: white
+}
+
+.listItemsImg {
+    margin: 1rem;
+    padding-right: 1rem;
+
+}
+
+.listItems:nth-child(1)>.listItemsImg{
+    margin-right: 0.5rem;
+}
+
+.listItems:nth-child(3)>.listItemsImg{
+    margin-right: 0.75rem;
+}
+
+.main {
+    min-height: calc(100vh - 14rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8rem 5rem 0 8rem;
+}
+
+.chats {
+    overflow: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    width: 100%;
+    max-width: 70rem;
+    height: calc(100vh - 17rem);
+}
+
+.chat {
+    margin: 1 rem;
+    padding: 2rem 3rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+}
+
+.chatImg {
+    object-fit: cover;
+    width: 3.5rem;
+    margin-right: 2;
+}
+
+.bot {
+    background: rgba(28, 30, 58, 1);
+    width: fit-content;
+    border-radius: 0.5rem;
+    
+
+}
+
+.chatFooter {
+    margin-top: auto;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inp {
+    padding: 0.5rem;
+    background: rgba(28, 30, 58, 1);
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    width: 68rem
+
+}
+
+.inp> input {
+    width: calc(100% - 3rem);
+    outline: none;
+    padding: 1.25rem;
+    color: white;
+
+}
+
+.inp>input, .send {
+    background: transparent;
+    border: none;
+}
+
+.chatFooter>p {
+    margin: 2rem 0;
+
 }
