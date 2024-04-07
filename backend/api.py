@@ -6,16 +6,6 @@ from dataModels.dbDataModels import User
 from utils.rateLimiter import RateLimiterMiddleware
 from utils.tokenBucket import TokenBucket
 
-# import psycopg2
-
-# conn = psycopg2.connect(
-#     dbname="postgres",
-#     dbuser="admin",
-#     password="password",
-#     host="localhost",
-#     port="5432"
-# )
-
 engine = create_engine('postgresql://admin:example@localhost:5432/userdb')
 
 app = FastAPI()
