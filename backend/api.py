@@ -1,8 +1,10 @@
 from fastapi import FastAPI
-from apiDataModels import userInfo
-from sqlalchemy import create_engine, Table, MetaData
+from dataModels.apiDataModels import userInfo
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from dbDataModels import User
+from dataModels.dbDataModels import User
+from utils.rateLimiter import RateLimiterMiddleware
+from utils.tokenBucket import TokenBucket
 
 # import psycopg2
 
@@ -17,6 +19,11 @@ from dbDataModels import User
 engine = create_engine('postgresql://admin:example@localhost:5432/userdb')
 
 app = FastAPI()
+
+bucket = TokenBucket(capacity=4, refill_rate=2)
+
+# Add the rate limiting middleware to the FastAPI app
+app.add_middleware(RateLimiterMiddleware, bucket=bucket)
 
 @app.post("/signup/")
 async def createUser(user: userInfo):
