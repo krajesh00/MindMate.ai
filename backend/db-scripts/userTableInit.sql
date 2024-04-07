@@ -8,3 +8,5 @@ CREATE TABLE users (
     age INT NOT NULL,
     username VARCHAR(50) NOT NULL
 );
+
+INSERT INTO users (firstname, lastname, passphrase, email, age, username) VALUES ('John', 'Doe', 'password', 'email @gmail.com', 25, 'johndoe');

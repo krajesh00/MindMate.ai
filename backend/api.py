@@ -10,6 +10,8 @@ from jwt import PyJWTError
 import dotenv
 import os
 import pymongo
+from openai import OpenAI
+import time
 
 dotEnvDir = os.path.join(os.path.dirname(__file__), '.env')
 dotenv.load_dotenv(dotEnvDir)
@@ -19,9 +21,10 @@ PUBLIC_KEY = os.getenv("public-key")
 
 engine = create_engine('postgresql://admin:example@localhost:5432/userdb')
 myclient = pymongo.MongoClient("mongodb://root:example@localhost:27017/")
-mydb = myclient["chatdb"]
-human_col= mydb["chatshuman"]
-ai_col = mydb["chatai"]
+client = OpenAI(api_key='<----- KEY GOES HERE ------->')
+mongo_db = myclient["chatdb"]
+human_col= mongo_db["chatshuman"]
+ai_col = mongo_db["chatai"]
 
 app = FastAPI()
 
@@ -69,7 +72,16 @@ async def createChat(chatObject: chatObject, request: Request):
         payload = jwt.decode(token, PUBLIC_KEY, algorithms=["RS256"])
 
         user_id = payload.get("id")
-        human_col.insert_one({"user_id": user_id, "chat": chatObject.chat, "time": chatObject.time})
-
+        human_col.insert_one({"user_id": user_id, "chat": chatObject.chat, "time": chatObject.time, "chat_id": chatObject.chat_id})
+        completion = client.chat.completions.create(
+            model="ft:gpt-3.5-turbo-1106:personal:500-with-val:9BHq7p8I",
+            messages=[
+                {"role": "system", "content": "You are an emotional chatbot that aims to pick out the three most accurate emotions you can from a prompt"},
+                {"role": "user", "content": chatObject.chat}
+            ]
+        )
+        ai_col.insert_one({"user_id": user_id, "chat": completion.choices[0].message, "time": time.time(), "chat_id": chatObject.chat_id})
+        
+        return {"chat": completion.choices[0].message}
     except PyJWTError:
         raise HTTPException(status_code=401, detail="invalid token")

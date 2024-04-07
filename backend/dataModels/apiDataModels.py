@@ -14,5 +14,6 @@ class loginObject(BaseModel):
     password: str
 
 class chatObject(BaseModel):
+    chat_id: str
     chat: str
     time: datetime.datetime 
