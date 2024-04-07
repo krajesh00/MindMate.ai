@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class userInfo(BaseModel):
     firstName: str
@@ -7,3 +8,11 @@ class userInfo(BaseModel):
     email: str
     password: str
     userName: str
+
+class loginObject(BaseModel):
+    userName: str
+    password: str
+
+class chatObject(BaseModel):
+    chat: str
+    time: datetime.datetime 
