@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+import datetime
 
 class userInfo(BaseModel):
     firstName: str
@@ -17,3 +17,4 @@ class chatObject(BaseModel):
     chat_id: str
     chat: str
     time: datetime.datetime 
+    resoureType: str
