@@ -49,7 +49,17 @@ const ChatUI = () => {
                     <div className="inp">
                         <input type="text" placeholder='Send a message'/><button className="send"><img src={sendBtn} alt="Send" /></button>
                     </div>
-                    <p className="txt"> May Give you Wrong stuff. We not responsible. Don't sue </p>
+                    <div className="resourceSelection">
+                        <label for="resourceDropdown" class="txt">What kind of resources are you looking for?:</label>
+                        <select name="resourceDropdown" id="resourceDropdown">
+                            <option value="CONCRETE_RESOURCES">Therapists and Wellness Centers</option>
+                            <option value="HELPLINES">Helplines</option>
+                            <option value="BLOG_POSTS">Blog Posts</option>
+                            <option value="EXERCISES">Exercises</option>
+                            <option value="STARTING_POINT">Starting Point</option>
+                        </select>
+                    </div>
+                    <p className="txt"> May give you wrong stuff. We are not responsible. Don't sue please. </p>
                 </div>
             </div>
         </div>
