@@ -2,21 +2,17 @@ import sys
 import os
 import requests
 import json as JSON
-from resources_type_enum import ResourcesType
+from .resources_type_enum import ResourcesType
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# hacky way to import from parent directory
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import config
-
-NUM_SEARCH_RESULTS = 2
 
 def make_search(query):
     payload = {
             'key': config.CUSTOM_SEARCH_API_KEY,
             'q': query,
-            'num': NUM_SEARCH_RESULTS,
             'cx': config.SEARCH_ENGINE_ID
     }
 
@@ -30,26 +26,40 @@ def find_concrete_resources(emotions):
     therapist_links = []
     center_titles = []
     center_links = []
+    num_results = 2
+
     for emotion in emotions:
         # search for therapists
         response = make_search(f'find a therapist for when you\'re feeling {emotion}')
         # for debugging
         # with open(f'therapists_{emotion}.json', 'w') as f:
         #     JSON.dump(response, f)
+        i = 0
         for result in response['items']:
+            if i >= num_results:
+                break
+            if result['title'].replace('...', '') in therapist_titles:
+                continue
             therapist_titles.append(result['title'])
             therapist_titles[-1] = therapist_titles[-1].replace('...', '')
             therapist_links.append(result['link'])
+            i += 1
 
         # search for wellness centers
         response = make_search(f'wellness centers for when you\'re feeling {emotion}')
         # for debugging
         # with open(f'wellness_centers_{emotion}.json', 'w') as f:
         #     JSON.dump(response, f)
+        i = 0
         for result in response['items']:
+            if i >= num_results:
+                break
+            if result['title'].replace('...', '') in center_titles:
+                continue
             center_titles.append(result['title'])
             center_titles[-1] = center_titles[-1].replace('...', '')
             center_links.append(result['link'])
+            i += 1
     
     message = f"Here's some resources to find a therapist that could help:\n"
     for title, link in list(zip(therapist_titles, therapist_links)):
@@ -63,13 +73,20 @@ def find_concrete_resources(emotions):
 def find_helplines(emotions):
     titles = []
     links = []
+    num_results = 2
 
     for emotion in emotions:
         response = make_search(f'feeling {emotion} helpline')
+        i = 0
         for result in response['items']:
+            if i >= num_results:
+                break
+            if result['title'].replace('...', '') in titles:
+                continue
             titles.append(result['title'])
             titles[-1] = titles[-1].replace('...', '')
             links.append(result['link'])
+            i += 1
     
     message = f"Here's some helplines that you can call for help:\n"
     for title, link in list(zip(titles, links)):
@@ -80,13 +97,20 @@ def find_helplines(emotions):
 def find_blog_posts(emotions):
     titles = []
     links = []
+    num_results = 2
 
     for emotion in emotions:
         response = make_search(f'how to stop feeling {emotion}')
+        i = 0
         for result in response['items']:
+            if i >= num_results:
+                break
+            if result['title'].replace('...', '') in titles:
+                continue
             titles.append(result['title'])
             titles[-1] = titles[-1].replace('...', '')
             links.append(result['link'])
+            i += 1
     
     message = f"Here's some resources you can look at:\n"
     for title, link in list(zip(titles, links)):
@@ -97,13 +121,20 @@ def find_blog_posts(emotions):
 def find_exercises(emotions):
     titles = []
     links = []
+    num_results = 2
 
     for emotion in emotions:
         response = make_search(f'exercises to stop feeling {emotion}')
+        i = 0
         for result in response['items']:
+            if i >= num_results:
+                break
+            if result['title'].replace('...', '') in titles:
+                continue
             titles.append(result['title'])
             titles[-1] = titles[-1].replace('...', '')
             links.append(result['link'])
+            i += 1
     
     message = f"Here's some exercises you can do to feel better:\n"
     for title, link in list(zip(titles, links)):
@@ -126,11 +157,12 @@ resource_functions = {
 
 def find_resources(emotions, resource_type):
     message = f"It looks like you might be feeling "
-    if emotions.length == 1:
+    emotions = [emotion.lower() for emotion in emotions]
+    if len(emotions) == 1:
         message += f"{emotions[0]}\n"
-    elif emotions.length == 2:
+    elif len(emotions) == 2:
         message += f"{emotions[0]} or {emotions[1]}\n"
-    elif emotions.length > 2:
+    elif len(emotions) > 2:
         for i in range(len(emotions) - 1):
             message += f"{emotions[i]}, "
         message += f"or {emotions[-1]}\n"
