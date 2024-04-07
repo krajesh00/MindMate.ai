@@ -3,7 +3,7 @@ import os
 from openai import OpenAI
 
 # hacky way to import from parent directory
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 import config
 
