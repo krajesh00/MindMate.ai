@@ -188,3 +188,15 @@
     margin: 2rem 0;
 
 }
+
+.resourceSelection {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+#resourceDropdown {
+    background-color: #080424;
+    color: white;
+    text-align-last: center;
+}
