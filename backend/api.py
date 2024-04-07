@@ -13,6 +13,7 @@ import os
 import pymongo
 from openai import OpenAI
 import time
+from chatbot_backend import get_help_message
 
 dotEnvDir = os.path.join(os.path.dirname(__file__), '.env')
 dotenv.load_dotenv(dotEnvDir)
@@ -90,6 +91,8 @@ async def createChat(chatObject: chatObject, request: Request):
         )
         ai_col.insert_one({"user_id": user_id, "chat": completion.choices[0].message, "time": time.time(), "chat_id": chatObject.chat_id})
         
-        return {"chat": completion.choices[0].message}
+        help_message = get_help_message(chatObject.chat, chatObject.resourceType)
+
+        return {"chat": completion.choices[0].message, "help_message": help_message}
     except PyJWTError:
         raise HTTPException(status_code=401, detail="invalid token")

@@ -17,4 +17,4 @@ class chatObject(BaseModel):
     chat_id: str
     chat: str
     time: datetime.datetime 
-    resoureType: str
+    resourceType: str
